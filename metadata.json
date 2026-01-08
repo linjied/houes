@@ -1,0 +1,7 @@
+{
+  "name": "ZenHome AI - 智能家装设计套件",
+  "description": "一个全面的家装设计平台，具有AI驱动的室内设计生成、2D户型规划、材料目录和智能预算估算功能。",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
