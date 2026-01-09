@@ -35,6 +35,7 @@ export interface DesignItem {
   posX: number;
   posY: number;
   rotation: number; // 旋转角度
+  customModelUrl?: string; // 外部 3D 模型 URL (GLB/GLTF)
 }
 
 export interface GeneratedDesign {
@@ -50,4 +51,13 @@ export interface ProjectState {
   rooms: Room[];
   generatedDesigns: GeneratedDesign[];
   selectedMaterialIds: string[];
+}
+
+// FIX: Declare 'model-viewer' as a valid JSX element to resolve TypeScript errors for custom elements
+declare global {
+  namespace JSX {
+    interface IntrinsicElements {
+      'model-viewer': any;
+    }
+  }
 }

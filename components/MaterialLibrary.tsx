@@ -81,6 +81,9 @@ const MaterialLibrary: React.FC<MaterialLibraryProps> = ({ materials, project, s
                     </span>
                   )}
                 </div>
+                <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                   <span className="bg-white text-slate-900 px-4 py-2 rounded-full font-bold text-xs shadow-xl transform translate-y-4 group-hover:translate-y-0 transition-transform">查看详情</span>
+                </div>
               </div>
               
               <div className="p-6 flex-1 flex flex-col">
@@ -117,45 +120,79 @@ const MaterialLibrary: React.FC<MaterialLibraryProps> = ({ materials, project, s
 
       {/* 材料详细信息模态框 */}
       {selectedDetail && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/80 backdrop-blur-xl p-6 animate-fadeIn" onClick={() => setSelectedDetail(null)}>
-          <div className="bg-white rounded-[3rem] shadow-2xl w-full max-w-4xl overflow-hidden animate-scaleIn flex flex-col md:flex-row" onClick={e => e.stopPropagation()}>
-             <div className="md:w-1/2 h-[400px] md:h-auto overflow-hidden relative">
-                <img src={selectedDetail.image} className="w-full h-full object-cover" alt="" />
-                <button 
-                  className="absolute top-6 left-6 w-12 h-12 bg-white/20 hover:bg-white/40 backdrop-blur-md rounded-full flex items-center justify-center text-white transition-all"
-                  onClick={() => setSelectedDetail(null)}
-                >
-                  <i className="fas fa-arrow-left"></i>
-                </button>
+        <div 
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/80 backdrop-blur-xl p-6 animate-fadeIn cursor-pointer" 
+          onClick={() => setSelectedDetail(null)}
+        >
+          <div 
+            className="bg-white rounded-[3rem] shadow-2xl w-full max-w-5xl overflow-hidden animate-scaleIn flex flex-col md:flex-row relative cursor-default" 
+            onClick={e => e.stopPropagation()}
+          >
+             {/* 移动端/桌面通用关闭按钮 */}
+             <button 
+                className="absolute top-6 right-6 z-10 w-12 h-12 bg-white/90 hover:bg-white border border-slate-200 rounded-full flex items-center justify-center text-slate-900 shadow-xl transition-all hover:scale-110 active:scale-95"
+                onClick={() => setSelectedDetail(null)}
+              >
+                <i className="fas fa-times text-xl"></i>
+              </button>
+
+             <div className="md:w-3/5 h-[400px] md:h-auto overflow-hidden relative group">
+                <img src={selectedDetail.image} className="w-full h-full object-cover transition-transform duration-[2000ms] group-hover:scale-110" alt={selectedDetail.name} />
+                <div className="absolute inset-0 bg-gradient-to-r from-black/20 to-transparent pointer-events-none"></div>
              </div>
-             <div className="p-10 md:w-1/2 flex flex-col">
+             
+             <div className="p-8 md:p-12 md:w-2/5 flex flex-col">
                 <div className="mb-8">
-                  <span className="text-indigo-600 font-black text-xs uppercase tracking-widest">{selectedDetail.category} | 专业选样</span>
-                  <h3 className="text-3xl font-black text-slate-900 mt-2 mb-4 leading-tight">{selectedDetail.name}</h3>
-                  <div className="grid grid-cols-2 gap-4">
-                     <div className="bg-slate-50 p-4 rounded-2xl">
-                        <p className="text-[10px] text-slate-400 font-bold uppercase mb-1">生产品牌</p>
-                        <p className="text-sm font-bold text-slate-800">{selectedDetail.brand || '优选品牌'}</p>
+                  <div className="flex items-center gap-2 mb-3">
+                    <span className="text-indigo-600 font-black text-xs uppercase tracking-[0.2em]">{selectedDetail.category}</span>
+                    <span className="w-1 h-1 rounded-full bg-slate-300"></span>
+                    <span className="text-slate-400 font-bold text-xs">SKU: {selectedDetail.id.toUpperCase()}</span>
+                  </div>
+                  <h3 className="text-3xl md:text-4xl font-black text-slate-900 mb-6 leading-tight tracking-tight">{selectedDetail.name}</h3>
+                  
+                  <div className="space-y-4">
+                     <div className="flex items-center justify-between p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                        <span className="text-[10px] text-slate-400 font-black uppercase tracking-widest">生产品牌</span>
+                        <span className="text-sm font-bold text-slate-800">{selectedDetail.brand || '甄选合作品牌'}</span>
                      </div>
-                     <div className="bg-slate-50 p-4 rounded-2xl">
-                        <p className="text-[10px] text-slate-400 font-bold uppercase mb-1">主要规格</p>
-                        <p className="text-sm font-bold text-slate-800">{selectedDetail.spec || '通用标准'}</p>
+                     <div className="flex items-center justify-between p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                        <span className="text-[10px] text-slate-400 font-black uppercase tracking-widest">标准规格</span>
+                        <span className="text-sm font-bold text-slate-800">{selectedDetail.spec || '工厂定制尺寸'}</span>
                      </div>
                   </div>
                 </div>
-                <div className="space-y-4 mb-10">
+
+                <div className="mb-10">
+                   <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">产品描述与选购建议</p>
                    <p className="text-slate-600 leading-relaxed text-sm">
-                      {selectedDetail.description} 该材料经过严苛测试，适用于各种室内装修风格。建议在施工前进行现场调样。
+                      {selectedDetail.description} 该材料在现代室内设计中具有极高的应用价值。其表面处理工艺确保了长期使用的耐久性与美观度。
                    </p>
                 </div>
-                <div className="mt-auto flex gap-4">
+
+                <div className="mt-auto space-y-4">
+                   <div className="flex items-baseline justify-between mb-2">
+                      <span className="text-xs font-bold text-slate-400">参考预算价格</span>
+                      <div className="flex items-baseline gap-1">
+                        <span className="text-4xl font-black text-slate-900">￥{selectedDetail.price}</span>
+                        <span className="text-sm font-bold text-slate-400">/{selectedDetail.unit}</span>
+                      </div>
+                   </div>
+
                    <button 
                     onClick={() => { toggleMaterial(selectedDetail.id); setSelectedDetail(null); }}
-                    className="flex-1 bg-indigo-600 text-white py-4 rounded-2xl font-bold shadow-xl shadow-indigo-100 hover:bg-indigo-700 transition-all flex items-center justify-center gap-2"
+                    className={`w-full py-5 rounded-[1.5rem] font-black shadow-2xl transition-all flex items-center justify-center gap-3 transform active:scale-95 ${
+                      project.selectedMaterialIds.includes(selectedDetail.id) 
+                        ? 'bg-red-50 text-red-600 border-2 border-red-100 hover:bg-red-100' 
+                        : 'bg-indigo-600 text-white shadow-indigo-200 hover:bg-indigo-700'
+                    }`}
                    >
-                     <i className="fas fa-cart-plus"></i>
-                     {project.selectedMaterialIds.includes(selectedDetail.id) ? '移除选样' : '加入选样'}
+                     <i className={`fas ${project.selectedMaterialIds.includes(selectedDetail.id) ? 'fa-minus-circle' : 'fa-plus-circle'} text-xl`}></i>
+                     {project.selectedMaterialIds.includes(selectedDetail.id) ? '从项目中移除' : '加入选项目清单'}
                    </button>
+                   
+                   <p className="text-[10px] text-center text-slate-400 font-medium">
+                     <i className="fas fa-info-circle mr-1"></i> 价格仅供参考，实际金额以供应商最终报价为准
+                   </p>
                 </div>
              </div>
           </div>
